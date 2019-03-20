@@ -4,6 +4,8 @@ const app = express();
 const twit = require("twit");
 const config = require('./config');
 const Twitter = new twit(config);
+const Sentiment = require('sentiment');
+const sentiment = new Sentiment();
 
 const port = process.env.PORT || 5000;
 const fs = require('fs');
@@ -75,6 +77,10 @@ function cleanTweet(tweet){
         user: {
             id: null,
             name: null
+        },
+        sentiment: {
+            score: null,
+            comparative: null
         }
     };
     tweet_info.created = tweet.created_at;
@@ -86,6 +92,12 @@ function cleanTweet(tweet){
     let user_info = tweet.user;
     tweet_info.user.id = user_info.id;
     tweet_info.user.name = user_info.name;
+
+    let tweet_sentiment = sentiment.analyze(tweet.text);
+    tweet_info.sentiment.score = tweet_sentiment.score;
+    tweet_info.sentiment.comparative = tweet_sentiment.comparative;
+
+    console.log(JSON.stringify(tweet_info), null, 2);
 
     return tweet_info;
 }

@@ -13,6 +13,8 @@ export default class tweet extends Component {
                     <li style={{style:'inline'}}>Id: {this.props.id}</li>
                     <li style={{style:'inline'}}>Hashtags: {this.props.hashtags}</li>
                     <li style={{style:'inline'}}>Urls: {this.props.urls}</li>
+                    <li style={{style:'inline'}}>Sentiment score: {this.props.score}</li>
+                    <li style={{style:'inline'}}>Sentiment comparative: {this.props.comparative}</li>
                 </ul>
             </div>
         )
