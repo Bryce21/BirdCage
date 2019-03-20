@@ -4,7 +4,6 @@ import React, { Component } from 'react';
 
 
 export default class TweetContainer extends Component {
-
     render(){
         let items = [];
         let number = 0;
@@ -31,5 +30,10 @@ export default class TweetContainer extends Component {
             </div>
 
         )
+    }
+
+    // This will be what causes re render on props change
+    componentWillReceiveProps(nextProps, nextContext) {
+
     }
 }

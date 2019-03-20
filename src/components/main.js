@@ -9,7 +9,12 @@ export default class Main extends Component {
             tweets: [],
             meta: {},
             processing: false,
-            value: ''
+            value: '',
+            pagination: {
+                currentPage: null,
+                currentResultsId : null,
+                nextResultsId : null
+            }
         }
     }
 
@@ -63,7 +68,13 @@ export default class Main extends Component {
         }).then((response)=>{
             response.text().then((text)=>{
                 let data = JSON.parse(text);
-                this.setState({tweets: data.tweets, meta: data.meta, processing: false});
+                let currentPage = ((this.state.currentPage + 1) || 0);
+                this.setState({tweets: data.tweets, meta: data.meta, processing: false, pagination: {
+                        currentPage: currentPage,
+                        currentResultsId : data.meta.currentResultsId,
+                        nextResultsId : data.meta.nextResultsId
+
+                }});
             });
 
         });

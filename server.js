@@ -16,7 +16,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.post('/api/search', (req, res) => {
     console.log('recieve post request');
-    let search_params = {q: req.body.post};
+    let search_params = {q: req.body.post, lang: 'en', count: 50};
     search_twitter(search_params).then( (result)=>{
         console.log('Twitter api call done, sending response: ');
         res.send(extractTweetInfo(result));
@@ -57,12 +57,12 @@ function extractTweetInfo(raw_data){
     let meta = raw_data.response.data.search_metadata;
     cleaned.meta.query = meta.query;
     cleaned.meta.count = meta.count;
-    cleaned.meta.next_results = meta.next_results;
+    cleaned.meta.nextResultsId = meta.next_results;
+    cleaned.meta.currentResultsId = meta.max_id;
 
     fs.writeFile("pretty_print_file.txt", JSON.stringify(raw_data, null, 2), (err)=>{
         if(err) console.log(err);
     });
-    console.log(cleaned);
     return cleaned
 }
 
@@ -96,8 +96,6 @@ function cleanTweet(tweet){
     let tweet_sentiment = sentiment.analyze(tweet.text);
     tweet_info.sentiment.score = tweet_sentiment.score;
     tweet_info.sentiment.comparative = tweet_sentiment.comparative;
-
-    console.log(JSON.stringify(tweet_info), null, 2);
 
     return tweet_info;
 }
