@@ -9,22 +9,27 @@ export default class Main extends Component {
             tweets: [],
             meta: {},
             processing: true,
-            value: '',
-            regexValue: '',
             pagination: {
                 currentPage: null,
                 currentResultsId: null,
                 nextResultsId: null
             },
             filteredTweets: [],
-            filtered: false
+            filtered: false,
+
+            apiSelectorValue: 'Standard',
+            value: '',
+            regexValue: '',
+            count: '',
+            createdOn: ''
+
         }
     }
 
 
     render() {
         let tweets = this.state.tweets;
-        if(this.state.filtered){
+        if (this.state.filtered) {
             tweets = this.state.filteredTweets
         }
         if (!this.state.processing) {
@@ -47,10 +52,35 @@ export default class Main extends Component {
     renderSearchbar() {
         return (
             <form onSubmit={this.handleSubmit}>
+                <input type="text" name="value" onChange={this.handleChangeAbstract} placeholder="Nasa"/>
+
+                <br/>
                 <label>
-                    <input type="text" name="name" onChange={this.handleChange}/>
+                    API level:
+                    <select value={this.state.apiSelectorValue} onChange={this.handleChangeAbstract}
+                            name={'apiSelectorValue'}>
+                        <option value="Standard">Standard</option>
+                        <option value="Premium">Premium</option>
+                        <option value="Enterprise">Enterprise</option>
+                    </select>
                 </label>
+
+                <br/>
+                <label>
+                    Count:
+                    <input type="number" name="count" onChange={this.handleChangeAbstract} style={{width: '20%'}}/>
+                </label>
+
+                <br/>
+                <label>
+                    Created since:
+                    <input type="text" name="createdOn" onChange={this.handleChangeAbstract} placeholder="2011-07-11"
+                           style={{width: '33%'}}/>
+                </label>
+
+                <br/>
                 <input type="submit" value="Submit"/>
+
             </form>
         )
     }
@@ -60,7 +90,7 @@ export default class Main extends Component {
         return (
             <div>
                 <label>
-                    <input type="text" name="name" onChange={this.handleRegexChange}/>
+                    <input type="text" name="regexValue" onChange={this.handleChangeAbstract}/>
                 </label>
                 <button onClick={this.handleRegexSubmit}>
                     Filter
@@ -70,20 +100,14 @@ export default class Main extends Component {
     }
 
 
-    handleRegexChange = (event) => {
-        this.setState({regexValue: event.target.value});
-    };
-
-
-    handleChange = (event) => {
-        console.log('Handle change called');
-        this.setState({value: event.target.value});
+    handleChangeAbstract = (event) => {
+        this.setState({ [event.target.name]: event.target.value });
     };
 
 
     handleRegexSubmit = e => {
         let regexValue = this.state.regexValue;
-        if(regexValue === ''){
+        if (regexValue === '') {
             this.setState({filteredTweets: [], filtered: false});
             return
         }
@@ -91,12 +115,14 @@ export default class Main extends Component {
         let error = null;
         try {
             regex = new RegExp(regexValue, 'g');
-        } catch(e) {
+        } catch (e) {
             error = e;
         }
-        if (error != null){return null}
+        if (error != null) {
+            return null
+        }
 
-        let filteredTweets = this.state.tweets.filter( (tweet) => {
+        let filteredTweets = this.state.tweets.filter((tweet) => {
             return tweet.text.match(regex)
         });
         this.setState({filteredTweets: filteredTweets, filtered: true})
@@ -105,21 +131,31 @@ export default class Main extends Component {
 
 
     handleSubmit = async e => {
+        e.preventDefault();
         console.log('Handle submit called');
         this.setState({processing: true});
-        e.preventDefault();
+        let body = JSON.stringify({
+            value: this.state.value,
+            apiSelectorValue: this.state.apiSelectorValue,
+            count: this.state.count,
+            createdOn: this.state.createdOn
+        });
+
         await fetch('/api/search', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({post: this.state.value}),
+            body: body,
         }).then((response) => {
             response.text().then((text) => {
                 let data = JSON.parse(text);
                 let currentPage = ((this.state.currentPage + 1) || 0);
                 this.setState({
-                    tweets: data.tweets, meta: data.meta, processing: false, filteredTweets: [],
+                    tweets: data.tweets,
+                    meta: data.meta,
+                    processing: false,
+                    filteredTweets: [],
                     filtered: false,
                     pagination: {
                         currentPage: currentPage,
