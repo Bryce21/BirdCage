@@ -21,7 +21,7 @@ export default class Main extends Component {
             value: '',
             regexValue: '',
             count: '',
-            createdOn: ''
+            sortBySentiment: false
         }
     }
 
@@ -71,13 +71,6 @@ export default class Main extends Component {
                 </label>
 
                 <br/>
-                <label>
-                    Created since:
-                    <input type="text" name="createdOn" onChange={this.handleChangeAbstract} placeholder="2011-07-11"
-                           style={{width: '33%'}}/>
-                </label>
-
-                <br/>
                 <input type="submit" value="Submit" id={'submitButton'}/>
 
             </form>
@@ -91,6 +84,18 @@ export default class Main extends Component {
                 <label>
                     <input type="text" name="regexValue" onChange={this.handleChangeAbstract} id={'regexSearchBar'}/>
                 </label>
+                <br/>
+
+                <label>
+                    Sort by Sentiment score:
+                    <input
+                        name="sortBySentiment"
+                        type="checkbox"
+                        checked={this.state.sortBySentiment}
+                        onChange={this.handleCheckboxChange} />
+                </label>
+                <br/>
+
                 <button onClick={this.handleRegexSubmit} id={'submitRegex'}>
                     Filter
                 </button>
@@ -104,11 +109,30 @@ export default class Main extends Component {
     };
 
 
+    handleCheckboxChange = (event) =>{
+        let newSortBySentiment = true;
+        if(this.state.sortBySentiment){
+            newSortBySentiment = false;
+        }
+        this.setState({sortBySentiment: newSortBySentiment})
+    };
+
+
     handleRegexSubmit = e => {
+        let filteredTweets = this.state.tweets;
+        filteredTweets = this.filterByRegularExpression();
+        if(this.state.sortBySentiment){
+            filteredTweets = this.filterBySentimentValue(filteredTweets);
+        }
+        this.setState({filteredTweets: filteredTweets, filtered: true})
+    };
+
+
+    filterByRegularExpression(){
         let regexValue = this.state.regexValue;
         if (regexValue === '') {
             this.setState({filteredTweets: [], filtered: false});
-            return
+            return this.state.tweets
         }
         let regex = null;
         let error = null;
@@ -120,13 +144,22 @@ export default class Main extends Component {
         if (error != null) {
             return null
         }
-
-        let filteredTweets = this.state.tweets.filter((tweet) => {
+        let tweetsToFilter = this.state.filteredTweets;
+        if(!this.state.filtered){
+            tweetsToFilter = this.state.tweets;
+        }
+        let filteredTweets = tweetsToFilter.filter((tweet) => {
             return tweet.text.match(regex)
         });
-        this.setState({filteredTweets: filteredTweets, filtered: true})
+        return filteredTweets
+    }
 
-    };
+
+    filterBySentimentValue(tweetsToFilter){
+        return tweetsToFilter.sort((a,b) => {
+            return a.sentiment.score - b.sentiment.score
+        });
+    }
 
 
     handleSubmit = async e => {
