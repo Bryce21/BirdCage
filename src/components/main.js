@@ -6,23 +6,22 @@ export default class Main extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            tweets: [],
-            meta: {},
-            processing: true,
+            tweets: this.props.tweets || [],
+            meta: this.props.meta || {},
+            processing: this.props.processing || 't',
             pagination: {
                 currentPage: null,
                 currentResultsId: null,
                 nextResultsId: null
             },
-            filteredTweets: [],
-            filtered: false,
+            filteredTweets: this.props.filteredTweets || [],
+            filtered: this.props.filtered || false,
 
             apiSelectorValue: 'Standard',
             value: '',
             regexValue: '',
             count: '',
             createdOn: ''
-
         }
     }
 
@@ -32,7 +31,7 @@ export default class Main extends Component {
         if (this.state.filtered) {
             tweets = this.state.filteredTweets
         }
-        if (!this.state.processing) {
+        if (this.state.processing === 'f') {
             return (
                 <div>
                     {this.renderSearchbar()}
@@ -52,7 +51,7 @@ export default class Main extends Component {
     renderSearchbar() {
         return (
             <form onSubmit={this.handleSubmit}>
-                <input type="text" name="value" onChange={this.handleChangeAbstract} placeholder="Nasa"/>
+                <input type="text" name="value" onChange={this.handleChangeAbstract} placeholder="Nasa" id={'searchBar'}/>
 
                 <br/>
                 <label>
@@ -79,7 +78,7 @@ export default class Main extends Component {
                 </label>
 
                 <br/>
-                <input type="submit" value="Submit"/>
+                <input type="submit" value="Submit" id={'submitButton'}/>
 
             </form>
         )
@@ -90,9 +89,9 @@ export default class Main extends Component {
         return (
             <div>
                 <label>
-                    <input type="text" name="regexValue" onChange={this.handleChangeAbstract}/>
+                    <input type="text" name="regexValue" onChange={this.handleChangeAbstract} id={'regexSearchBar'}/>
                 </label>
-                <button onClick={this.handleRegexSubmit}>
+                <button onClick={this.handleRegexSubmit} id={'submitRegex'}>
                     Filter
                 </button>
             </div>
@@ -133,7 +132,7 @@ export default class Main extends Component {
     handleSubmit = async e => {
         e.preventDefault();
         console.log('Handle submit called');
-        this.setState({processing: true});
+        this.setState({processing: 't'});
         let body = JSON.stringify({
             value: this.state.value,
             apiSelectorValue: this.state.apiSelectorValue,
@@ -154,7 +153,7 @@ export default class Main extends Component {
                 this.setState({
                     tweets: data.tweets,
                     meta: data.meta,
-                    processing: false,
+                    processing: 'f',
                     filteredTweets: [],
                     filtered: false,
                     pagination: {
