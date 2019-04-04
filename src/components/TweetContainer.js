@@ -10,7 +10,7 @@ export default class TweetContainer extends Component {
         for(let tweet of this.props.tweets){
             items.push(
                 <ListGroup.Item key={number}>
-                    <Tweet text={tweet.text} id={tweet.id} hashtags={tweet.hashtags} urls={tweet.urls} score={tweet.sentiment.score} comparative={tweet.sentiment.comparative}/>
+                    <Tweet text={tweet.text} id={tweet.id} hashtags={tweet.hashtags} urls={tweet.urls} created={tweet.created} user={tweet.user} score={tweet.sentiment.score} comparative={tweet.sentiment.comparative}/>
                 </ListGroup.Item>
 
             );
