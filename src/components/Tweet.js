@@ -22,6 +22,8 @@ export default class tweet extends Component {
         return <div>
             <ul style={{textAlign: 'center'}}>
                 <li style={{style:'inline'}}>Tweet: {this.props.text}</li>
+                <li style={{style:'inline'}}>User: {this.props.user.name}</li>
+                <li style={{style:'inline'}}>Created: {this.props.created}</li>
                 <li style={{style:'inline'}}>Id: {this.props.id}</li>
                 <li style={{style:'inline'}}>Hashtags: {this.props.hashtags}</li>
                 <li style={{style:'inline'}}>Urls: {this.props.urls}</li>

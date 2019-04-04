@@ -123,6 +123,10 @@ export default class Main extends Component {
         filteredTweets = this.filterByRegularExpression();
         if(this.state.sortBySentiment){
             filteredTweets = this.filterBySentimentValue(filteredTweets);
+        } else {
+            filteredTweets = filteredTweets.sort((a,b) => {
+                return new Date(a.created) - new Date(b.created)
+            });
         }
         this.setState({filteredTweets: filteredTweets, filtered: true})
     };
