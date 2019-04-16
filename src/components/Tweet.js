@@ -19,14 +19,15 @@ export default class tweet extends Component {
     }
 
     inBarRender() {
+      let userUrl = "https://twitter.com/"+this.props.user.name
         return <div>
             <ul style={{textAlign: 'center'}}>
                 <li style={{style:'inline'}}>Tweet: {this.props.text}</li>
-                <li style={{style:'inline'}}>User: {this.props.user.name}</li>
+                <li style={{style:'inline'}}>User: <a href="userUrl" target="_blank">{this.props.user.name}</a></li>
                 <li style={{style:'inline'}}>Created: {this.props.created}</li>
                 <li style={{style:'inline'}}>Id: {this.props.id}</li>
                 <li style={{style:'inline'}}>Hashtags: {this.props.hashtags}</li>
-                <li style={{style:'inline'}}>Urls: {this.props.urls}</li>
+                <li style={{style:'inline'}}>Urls: <a href={this.props.urls} target="_blank">{this.props.urls}</a></li>
                 <li style={{style:'inline'}}>Sentiment score: {this.props.score}</li>
                 <li style={{style:'inline'}}>Sentiment comparative: {this.props.comparative}</li>
             </ul>
