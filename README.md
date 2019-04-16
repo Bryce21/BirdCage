@@ -1,5 +1,11 @@
 Birdcage comes loaded with API credentials connected to a Twitter account that can be found here : https://twitter.com/?lang=en
-The API credentials that Birdcage uses are the defuat public key for users. If user wish to download their own credntials so that they can be granted unrestricted API calls users should follow the instuctions here: https://docs.inboundnow.com/guide/create-twitter-application/. User's can follow the steps from the previous link and subsitute the crendntials in the Bridcage congfiguration file. 
+The API credentials that Birdcage uses are the defuat public key for users.
+
+
+
+
+
+If user wish to download their own credntials so that they can be granted unrestricted API calls users should follow the instuctions here: https://docs.inboundnow.com/guide/create-twitter-application/. User's can follow the steps from the previous link and subsitute the crendntials in the Bridcage congfiguration file. 
 
 To attempt the above steps the user must git clone the application for the maipulation of Birdcage files. After the project is cloned the user will also have to download the java nodes if the user wishes to modify. Instrucitons on downloading the cluster can be found here: https://docs.npmjs.com/downloading-and-installing-packages-locally
 ************************************************************************************************************************************
