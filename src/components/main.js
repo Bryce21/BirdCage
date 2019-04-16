@@ -50,11 +50,12 @@ export default class Main extends Component {
 
     renderSearchbar() {
         return (
-            <form onSubmit={this.handleSubmit}>
-                <input type="text" name="value" onChange={this.handleChangeAbstract} placeholder="Nasa" id={'searchBar'}/>
+            <form onSubmit={this.handleSubmit} style = {{textAlign:'center'}}>
+                <input type="text" name="value" onChange={this.handleChangeAbstract} placeholder="Search keyword here" id={'searchBar'}
+                    style = {{marginTop:'20px'}}/>
 
                 <br/>
-                <label>
+                <label style = {{marginTop:'10px'}}>
                     API level:
                     <select value={this.state.apiSelectorValue} onChange={this.handleChangeAbstract}
                             name={'apiSelectorValue'}>
@@ -65,7 +66,7 @@ export default class Main extends Component {
                 </label>
 
                 <br/>
-                <label>
+                <label style = {{marginTop:'10px'}}>
                     Count:
                     <input type="number" name="count" onChange={this.handleChangeAbstract} style={{width: '20%'}}/>
                 </label>
@@ -80,7 +81,7 @@ export default class Main extends Component {
 
     renderRegexSearchBar() {
         return (
-            <div>
+            <div style={{textAlign:'center'}}>
                 <label>
                     <input type="text" name="regexValue" onChange={this.handleChangeAbstract} id={'regexSearchBar'}/>
                 </label>
