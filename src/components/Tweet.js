@@ -19,11 +19,13 @@ export default class tweet extends Component {
     }
 
     inBarRender() {
-      let userUrl = "https://twitter.com/"+this.props.user.name
+
+        // let userUrl = "https://twitter.com/"+this.props.user.name;
+        let userUrl = "https://twitter.com/intent/user?user_id="+this.props.user.id.toString();
         return <div>
             <ul style={{textAlign: 'center'}}>
                 <li style={{style:'inline'}}>Tweet: {this.props.text}</li>
-                <li style={{style:'inline'}}>User: <a href="userUrl" target="_blank">{this.props.user.name}</a></li>
+                <li style={{style:'inline'}}>User: <a href={userUrl} target="_blank">{this.props.user.name}</a></li>
                 <li style={{style:'inline'}}>Created: {this.props.created}</li>
                 <li style={{style:'inline'}}>Id: {this.props.id}</li>
                 <li style={{style:'inline'}}>Hashtags: {this.props.hashtags}</li>
