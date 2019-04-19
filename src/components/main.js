@@ -21,7 +21,8 @@ export default class Main extends Component {
             value: '',
             regexValue: '',
             count: '',
-            sortBySentiment: false
+            sortBySentiment: false,
+            filterError: null
         }
     }
 
@@ -32,11 +33,20 @@ export default class Main extends Component {
             tweets = this.state.filteredTweets
         }
         if (this.state.processing === 'f') {
+            let filterError = <div></div>
+            if(this.state.filterError != null){
+                filterError = <div>
+                    <p>A filtering error occured. No filtering was done. Error:</p>
+                    <p>{this.state.filterError.message}</p>
+                </div>
+            }
+
             return (
                 <div>
                     {this.renderSearchbar()}
                     <br/>
                     {this.renderRegexSearchBar()}
+                    {filterError}
                     <TweetContainer tweets={tweets} meta={this.state.meta}/>
                 </div>
             )
@@ -121,7 +131,14 @@ export default class Main extends Component {
 
     handleRegexSubmit = e => {
         let filteredTweets = this.state.tweets;
-        filteredTweets = this.filterByRegularExpression();
+
+        try{
+            filteredTweets = this.filterByRegularExpression();
+        } catch(filterError){
+            this.setState({filterError: filterError, filtered: false, filteredTweets: this.state.tweets})
+            return null
+        }
+
         if(this.state.sortBySentiment){
             filteredTweets = this.filterBySentimentValue(filteredTweets);
         } else {
@@ -129,7 +146,7 @@ export default class Main extends Component {
                 return new Date(a.created) - new Date(b.created)
             });
         }
-        this.setState({filteredTweets: filteredTweets, filtered: true})
+        this.setState({filteredTweets: filteredTweets, filtered: true, filterError: null})
     };
 
 
@@ -139,20 +156,18 @@ export default class Main extends Component {
             this.setState({filteredTweets: [], filtered: false});
             return this.state.tweets
         }
-        let regex = null;
-        let error = null;
-        try {
-            regex = new RegExp(regexValue, 'g');
-        } catch (e) {
-            error = e;
+
+        let regex = new RegExp(regexValue, 'g');
+        if(regex == null){
+            throw new Error("Regular expression is null. Probably bad input.")
         }
-        if (error != null) {
-            return null
-        }
+
+
         let tweetsToFilter = this.state.filteredTweets;
         if(!this.state.filtered){
             tweetsToFilter = this.state.tweets;
         }
+
         let filteredTweets = tweetsToFilter.filter((tweet) => {
             return tweet.text.match(regex)
         });
@@ -194,6 +209,7 @@ export default class Main extends Component {
                     processing: 'f',
                     filteredTweets: [],
                     filtered: false,
+                    filterError: null,
                     pagination: {
                         currentPage: currentPage,
                         currentResultsId: data.meta.currentResultsId,
