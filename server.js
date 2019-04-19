@@ -18,7 +18,6 @@ app.post('/api/search', (req, res) => {
     console.log('recieve post request');
     let search_params = {q: req.body.value, lang: 'en', count: req.body.count || 15};
     search_twitter(search_params).then( (result)=>{
-        console.log('Twitter api call done, sending response: ');
         res.send(extractTweetInfo(result));
     });
 
